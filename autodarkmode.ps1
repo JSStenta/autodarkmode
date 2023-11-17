@@ -44,18 +44,7 @@ else {
     $principal = New-ScheduledTaskPrincipal -UserId 'Administrator' -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet #-StartWhenAvailable
     $task = New-ScheduledTask -Action $action -Trigger $trigger -Settings $settings -Principal $principal
-
     Unregister-ScheduledTask -TaskName $Name -Confirm:$false
     Register-ScheduledTask $Name -InputObject $task
-        
-    #Log data
-    Add-Content logAutoDark.txt ($Now.ToString() + $line + ($Daylight -split ('; ') -join $ln) + $line + 'ScheduledTask: Name=' + $Name + ", trigger=" + $Time)
 }
 
-    
-
-$settings = New-ScheduledTaskSettingsSet #-StartWhenAvailable
-$task = New-ScheduledTask -Action $action -Trigger $trigger -Settings $settings
-
-Unregister-ScheduledTask -TaskName $Name -Confirm:$false
-Register-ScheduledTask $Name -InputObject $task    
