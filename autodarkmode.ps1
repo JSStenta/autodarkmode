@@ -1,19 +1,12 @@
 Add-Type -AssemblyName System.Device #Required to access System.Device.Location namespace
 $GeoWatcher = New-Object System.Device.Location.GeoCoordinateWatcher #Create the required object
 $GeoWatcher.Start() #Begin resolving current locaton
-$espera = 5
-$ln = "`n"
-$line = $ln + "-----------------------------------------" + $ln
+$wait = 5
 
-while(!(Test-Connection -ComputerName bingwallpaperimages.azureedge.net -Count 1 -Quiet)){
-    Start-Sleep -Seconds $espera
-    $espera += 5
-}
-$espera = 5
 while (($GeoWatcher.Status -ne 'Ready') -and ($GeoWatcher.Permission -ne 'Denied')) {
-    'Espera...'
-    Start-Sleep -Seconds $espera #Wait for discovery.
-    $espera += 5
+    'Wait...'
+    Start-Sleep -Seconds $wait #Wait for discovery.
+    $wait += 5
 }
 
 if ($GeoWatcher.Permission -eq 'Denied'){
@@ -59,7 +52,4 @@ if ($GeoWatcher.Permission -eq 'Denied'){
 
     Unregister-ScheduledTask -TaskName $Name -Confirm:$false
     Register-ScheduledTask $Name -InputObject $task
-    
-    #Log data
-    Add-Content logAutoDark.txt ($Now.ToString() + $line + ($Daylight -split('; ') -join $ln) + $line + 'ScheduledTask: Name=' + $Name + ", trigger=" + $Time)
 }
